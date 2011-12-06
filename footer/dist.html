@@ -1,0 +1,4 @@
+[(#SESSION{id_auteur}|oui)| </span><a href="#URL_LOGOUT" rel="nofollow"><:icone_deconnecter:></a>][<span class="sep">
+(#SESSION{id_auteur}|non)| </span><a href="[(#URL_PAGE{login}|parametre_url{url,#SELF})]" rel="nofollow" class='login_modal'><:lien_connecter:></a>][<span class="sep">
+(#AUTORISER{ecrire})| </span><a href="#EVAL{_DIR_RESTREINT_ABS}"><:espace_prive:></a>]
+|
