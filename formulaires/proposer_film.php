@@ -42,6 +42,13 @@ function formulaires_proposer_film_verifier_dist($id_rubrique,$id_article=0){
 		else {
 			if ($json['Poster']=="N/A")
 				$json['Poster']="";
+			else {
+				$adresse = $GLOBALS['meta']["adresse_site"];
+				$GLOBALS['meta']["adresse_site"] = '';
+				include_spip('inc/distant');
+				$json['Poster'] = _DIR_RACINE . copie_locale($json['Poster']);
+				$GLOBALS['meta']["adresse_site"] = $adresse;
+			}
 			$erreurs['_imdb'] = $json;
 		}
 	}
