@@ -1,0 +1,46 @@
+<style>
+	.imdb {padding-left: 90px;}
+	.imdb img {float: left;margin-left: -90px;position: relative;display: inline;}
+	.imdb dt,.imdb dd {margin-bottom: 0;}
+	.item.film.refuse .descriptif {color:#999;text-decoration: line-through;}
+</style>
+<div class="listefilms">
+<B_films>
+	<h3>[(#ENV{statut}|=={publie}|oui)
+			[(#GRAND_TOTAL|singulier_ou_pluriel{proposer_film:un_film_vu,proposer_film:nb_films_vus})]
+		][(#ENV{statut}|=={publie}|non)
+			[(#GRAND_TOTAL|singulier_ou_pluriel{proposer_film:un_film_propose,proposer_film:nb_films_proposes})]
+		]
+	</h3>
+	<ul class="liste-items films">
+		<BOUCLE_films(ARTICLES){id_rubrique}{statut IN #ENV{statut,#LISTE{prop,refuse}}}{notation}{!par #ENV{par,nombre_votes}}{pagination 20}>
+		<li class="item film #STATUT">[(#STATUT|=={prop}|oui)[(#FORMULAIRE_JAIME{article,#ID_ARTICLE})]]
+			[<div class='descriptif #EDIT{descriptif}'>(#DESCRIPTIF|PtoBR|sinon{#TITRE}|image_reduire{80,125})</div>]
+			[(#AUTORISER{modifier,article,#ID_ARTICLE})
+			<div class="action">
+			[(#STATUT|=={publie}|non)
+				[(#BOUTON_ACTION{Supprimer,[(#URL_ACTION_AUTEUR{instituer_objet,[article-(#ID_ARTICLE)-poubelle],#SELF})],ajax small})]
+			]
+			[(#STATUT|=={prop}|oui)
+				[(#BOUTON_ACTION{Refuser,[(#URL_ACTION_AUTEUR{instituer_objet,[article-(#ID_ARTICLE)-refuse],#SELF})],ajax small})]
+			]
+			[(#STATUT|=={prop}|non)
+				[(#BOUTON_ACTION{Proposer à nouveau,[(#URL_ACTION_AUTEUR{instituer_objet,[article-(#ID_ARTICLE)-prop],#SELF})],ajax small})]
+			]
+			[(#STATUT|=={publie}|non)
+			[(#BOUTON_ACTION{Vu,[(#URL_ACTION_AUTEUR{instituer_objet,[article-(#ID_ARTICLE)-publie],#SELF})],ajax small})]
+			]
+			</div>
+			]
+		</li>
+		</BOUCLE_films>
+	</ul>
+	[<p class="pagination">(#PAGINATION{precedent_suivant})</p>]
+</B_films>
+	[(#ENV{statut}|=={publie}|oui)
+	<h3><:proposer_film:aucun_film_vu:></h3>
+	][(#ENV{statut}|=={publie}|non)
+	<h3><:proposer_film:aucun_film_propose:></h3>
+	]
+<//B_films>
+</div>

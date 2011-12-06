@@ -1,0 +1,13 @@
+<p class="pagination">
+	[(#SELF|parametre_url{vu,''}|lien_ou_expose{Films proposés,#ENV{vu,''}|non})]
+	| [(#SELF|parametre_url{vu,'oui'}|lien_ou_expose{Films vus,#ENV{vu,''}|oui})]
+</p>
+[(#ENV{vu,''}|oui)
+<INCLURE{fond=inclure/liste-films-proposes,id_rubrique=1,statut=publie,par=date,ajax} />
+]
+[(#ENV{vu,''}|non)
+<INCLURE{fond=inclure/liste-films-proposes,id_rubrique=1,ajax} />
+<div class="ajax">
+	#FORMULAIRE_PROPOSER_FILM{1}
+</div>
+]

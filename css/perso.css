@@ -1,0 +1,9 @@
+.pagination {background: none;}
+.listefilms,.formulaire_proposer_film {margin-left: 7em;margin-right: 7em;}
+.formulaire_proposer_film {margin-top: 3em;}
+.liste-items.films .item {list-style: none;}
+.formulaire_jaime {float: right;margin-top: 0;}
+.formulaire_jaime * {margin-top: 0;}
+.formulaire_jaime .etoiles {display: block;float: right;margin-left: 10px;}
+.formulaire_jaime form {clear:none;float: right;}
+.formulaire_jaime .submit {color:#333;box-shadow: none;background: none;}

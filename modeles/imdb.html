@@ -1,0 +1,10 @@
+<div class="imdb">
+	[(#ENV*{imdb}|table_valeur{Poster}|image_reduire{100,100})]
+	<dl>
+		<dt>[<a href="http://www.imdb.com/title/[(#ENV*{imdb}|table_valeur{ID})]/">(#ENV*{imdb}|table_valeur{Title})</a>]</dt>
+		<dd>[(#ENV*{imdb}|table_valeur{Director})][, (#ENV*{imdb}|table_valeur{Year})]</dd>
+		<dd>[(#ENV*{imdb}|table_valeur{Actors})]</dd>
+		<dd>[(#ENV*{imdb}|table_valeur{Plot})]</dd>
+		<dd>[(#ENV*{imdb}|table_valeur{Runtime})]</dd>
+	</dl>
+</div>
