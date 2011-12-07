@@ -8,6 +8,13 @@ include_spip('inc/editer');
  * @return array
  */
 function formulaires_proposer_film_charger_dist($id_rubrique,$id_article=0){
+	if (!$GLOBALS['visiteur_session']['id_auteur'])
+		return
+			"<p class='center'>"
+			. _T("proposer_film:info_identifiez_vous")
+		  . ' <a href="'.generer_url_public('login',"url=".self()).'">'._T('public:lien_connecter')."</a>"
+	    . "</p>";
+
 	$valeurs = formulaires_editer_objet_charger('article',$id_article,$id_rubrique,0,'','');
 	// il faut enlever l'id_rubrique car la saisie se fait sur id_parent
 	// et id_rubrique peut etre passe dans l'url comme rubrique parent initiale

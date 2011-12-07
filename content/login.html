@@ -1,0 +1,34 @@
+[(#REM)
+	Est-ce qu'on se connecte a l'espace prive ou pas ?
+]
+[(#ENV{url}|=={''}|?{#SET{prive,' '}})]
+[(#ENV{url}|match{^#EVAL{_DIR_RESTREINT_ABS}}|?{#SET{prive,' '}})]
+
+[(#REM) Fil d'Ariane ]
+<p id="hierarchie"><a href="#URL_SITE_SPIP/"><:accueil_site:></a>[<span class="sep"> &gt; </span><strong class="on">(#GET{prive}|?{<:login_acces_prive:>,<:lien_connecter:>})</strong>]</p>
+
+<div class="content-principal">
+	<div class="cartouche">
+		[<h1 class="h1">(#GET{prive}|?{<:login_acces_prive:>,<:lien_connecter:>})</h1>]
+	</div>
+
+	<style>
+		.line {background: #FCFCFC;border: 1px solid #ddd;}
+		.formulaire_spip {background: none;border: 0;}
+		.formulaire_inscription {margin-left: 40px;border-left: 1px solid #eee;}
+		.formulaire_inscription p.explication:first-of-type {display: none;}
+		.formulaire_inscription legend:nth-child(3) {display: none;}
+	</style>
+
+	<div class="line">
+		<div class="unit size1of2">
+			<div class="ajax">
+			[(#FORMULAIRE_LOGIN{#ENV{url}|sinon{#URL_ECRIRE{accueil}}})]
+			</div>
+		</div>
+		<div class="unit lastUnit">
+			#FORMULAIRE_INSCRIPTION
+		</div>
+	</div>
+
+</div>

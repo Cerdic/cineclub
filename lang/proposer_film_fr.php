@@ -16,6 +16,7 @@ $GLOBALS[$GLOBALS['idx_lang']] = array(
 	'bouton_rechercher' => 'Rechercher dans IMDB',
 	'erreur_titre_inconnu_imbd' => 'Aucune correspondance dans la base IMDB',
 	'erreur_imbd' => 'Aucune correspondance dans la base IMDB',
+	'info_identifiez_vous' => 'Vous devez être identifié pour proposer un film.',
 
 );
 
