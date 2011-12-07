@@ -26,31 +26,11 @@ function formulaires_proposer_film_verifier_dist($id_rubrique,$id_article=0){
 		)){
 		$titre = _request('titre');
 
-		if (preg_match(',http://(?:www.)?imdb.(?:fr|com)/title/([^/]+)/,',$titre,$m))
-			$api = parametre_url("http://www.imdbapi.com/",'i',$m[1]);
+		$json = renseigner_imdb($titre);
+		if (is_string($json))
+			$erreurs['titre'] = $json;
 		else
-			$api = parametre_url("http://www.imdbapi.com/",'t',$titre);
-		include_spip('inc/distant');
-		$json = recuperer_page($api);
-		$json = json_decode($json,true);
-		if (!$json){
-			$erreurs['titre'] = _T('proposer_film:erreur_titre_inconnu_imbd');
-		}
-		elseif(!isset($json['Title'])){
-			$erreurs['titre'] = _T('proposer_film:erreur_imbd');
-		}
-		else {
-			if ($json['Poster']=="N/A")
-				$json['Poster']="";
-			else {
-				$adresse = $GLOBALS['meta']["adresse_site"];
-				$GLOBALS['meta']["adresse_site"] = '';
-				include_spip('inc/distant');
-				$json['Poster'] = _DIR_RACINE . copie_locale($json['Poster']);
-				$GLOBALS['meta']["adresse_site"] = $adresse;
-			}
 			$erreurs['_imdb'] = $json;
-		}
 	}
 	return $erreurs;
 
@@ -86,4 +66,71 @@ function formulaires_proposer_film_traiter_dist($id_rubrique,$id_article=0){
 }
 
 
+function renseigner_imdb($search){
+	$api_endpoint = "http://www.imdbapi.com/";
+	if (preg_match(',http://(?:www.)?imdb.(?:fr|com)/title/([^/]+)/,',$search,$m))
+		$url = parametre_url($api_endpoint,'i',$m[1]);
+	elseif (preg_match(',^tt\d+$,i',$search))
+		$url = parametre_url($api_endpoint,'i',$search);
+	else
+		$url = parametre_url($api_endpoint,'t',$search);
+
+	include_spip('inc/distant');
+	$json = recuperer_page($url);
+	$json = json_decode($json,true);
+	if (!$json)
+		return _T('proposer_film:erreur_titre_inconnu_imbd');
+
+	if(!isset($json['Title']))
+		return _T('proposer_film:erreur_imbd');
+
+	$id = $json['ID'];
+
+	// corriger le poster
+	if ($json['Poster']=="N/A")
+		$json['Poster']="";
+	else {
+		$adresse = $GLOBALS['meta']["adresse_site"];
+		$GLOBALS['meta']["adresse_site"] = '';
+		$json['Poster'] = _DIR_RACINE . copie_locale($json['Poster']);
+		$GLOBALS['meta']["adresse_site"] = $adresse;
+	}
+
+	// corriger le titre
+	$url = "http://www.imdb.com/title/$id/";
+	$html = recuperer_page($url);
+	$h1 = extraire_balise($html,"h1");
+	$h1 = preg_replace(",<span.*</span>,Uims","",$h1);
+	$h1 = trim(strip_tags($h1));
+	include_spip('inc/charset');
+	$h1 = unicode2utf8($h1);
+	$json['Title'] = $h1;
+
+	return $json;
+}
+
+
+function unicode2utf8($texte) {
+
+	// 1. Entites &#128; et suivantes
+	$vu = array();
+	if (preg_match_all(',&#0*([1-9][0-9]+);,S',
+	$texte, $regs, PREG_SET_ORDER))
+	foreach ($regs as $reg) {
+		if ($reg[1]>127 AND !isset($vu[$reg[0]]))
+			$vu[$reg[0]] = caractere_utf_8($reg[1]);
+	}
+	//$texte = str_replace(array_keys($vu), array_values($vu), $texte);
+
+	// 2. Entites > &#xFF;
+	//$vu = array();
+	if (preg_match_all(',&#x0*([1-9a-f][0-9a-f]+);,iS',
+	$texte, $regs, PREG_SET_ORDER))
+	foreach ($regs as $reg) {
+		if (!isset($vu[$reg[0]]))
+			$vu[$reg[0]] = caractere_utf_8(hexdec($reg[1]));
+	}
+	return str_replace(array_keys($vu), array_values($vu), $texte);
+
+}
 ?>
