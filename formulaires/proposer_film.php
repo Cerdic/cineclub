@@ -74,17 +74,27 @@ function formulaires_proposer_film_traiter_dist($id_rubrique,$id_article=0){
 
 
 function renseigner_imdb($search){
+	$id = "";
+	$html = "";
 	$api_endpoint = "http://www.imdbapi.com/";
 	if (preg_match(',http://(?:www.)?imdb.(?:fr|com)/title/([^/]+)/,',$search,$m))
-		$url = parametre_url($api_endpoint,'i',$m[1]);
+		$id = $m[1];
 	elseif (preg_match(',^tt\d+$,i',$search))
-		$url = parametre_url($api_endpoint,'i',$search);
+		$id = $search;
+
+	if ($id)
+		$url = parametre_url($api_endpoint,'i',$id);
 	else
 		$url = parametre_url($api_endpoint,'t',$search);
 
 	include_spip('inc/distant');
 	$json = recuperer_page($url);
 	$json = json_decode($json,true);
+	if ($json AND $id){
+		$url = "http://www.imdb.com/title/$id/";
+		$html = recuperer_page($url);
+		$json = extraire_imdb_from_html($id, $html);
+	}
 	if (!$json)
 		return _T('proposer_film:erreur_titre_inconnu_imbd');
 
@@ -104,18 +114,60 @@ function renseigner_imdb($search){
 	}
 
 	// corriger le titre
-	$url = "http://www.imdb.com/title/$id/";
-	$html = recuperer_page($url);
-	$h1 = extraire_balise($html,"h1");
-	$h1 = preg_replace(",<span.*</span>,Uims","",$h1);
-	$h1 = trim(strip_tags($h1));
-	include_spip('inc/charset');
-	$h1 = unicode2utf8($h1);
-	$json['Title'] = $h1;
+	if (!$html){
+		$url = "http://www.imdb.com/title/$id/";
+		$html = recuperer_page($url);
+		$json2 = extraire_imdb_from_html($id, $html);
+		$json['Title'] = $json2['Title'];
+	}
 
 	return $json;
 }
 
+
+/*
+ http://www.imdb.com/title/tt0276929/
+ */
+function extraire_imdb_from_html($id, $html){
+	$json = array(
+		'Title' => '',
+		"Year" => "",
+		"Rated" => "",
+		"Released" => "",
+		"Genre" => "",
+		"Director" => "",
+		"Writer" => "",
+		"Actors" => "",
+		"Plot" => "",
+		"Poster" => "",
+		"Runtime" => "",
+		"Rating" => "",
+		"Votes" => "",
+		"ID" => "$id",
+		"Response" => "True",
+	);
+
+	$h1 = extraire_balise($html,"h1");
+	$a = extraire_balise($h1,"a");
+	$json['Year'] = strip_tags($a);
+
+	$h1 = preg_replace(",<span.*</span>,Uims","",$h1);
+	$h1 = trim(strip_tags($h1));
+	$json['Title'] = $h1;
+
+	if (preg_match(",http://ia.media-imdb.com/images/[^'\"]*.jpg,i",$html,$m))
+		$json['Poster'] = $m[0];
+
+	if (preg_match(",<a[^>]*itemprop=['\"]director['\"].*</a>,Uims",$html,$m))
+		$json['Director'] = strip_tags($m[0]);
+
+	$json = array_map('trim',$json);
+	include_spip('inc/charset');
+	$json = array_map('html2unicode',$json);
+	$json = array_map('unicode2utf8',$json);
+
+	return $json;
+}
 
 function unicode2utf8($texte) {
 
