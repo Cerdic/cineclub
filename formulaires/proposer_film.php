@@ -82,26 +82,25 @@ function renseigner_imdb($search){
 	elseif (preg_match(',^tt\d+$,i',$search))
 		$id = $search;
 
-	if ($id)
-		$url = parametre_url($api_endpoint,'i',$id);
-	else
-		$url = parametre_url($api_endpoint,'t',$search);
-
 	include_spip('inc/distant');
-	$json = recuperer_page($url);
-	$json = json_decode($json,true);
-	if ($json AND $id){
-		$url = "http://www.imdb.com/title/$id/";
-		$html = recuperer_page($url);
-		$json = extraire_imdb_from_html($id, $html);
+	$jsonapi = false;
+	if (!$id){
+		$url = parametre_url($api_endpoint,'t',$search);
+		$jsonapi = recuperer_page($url);
+		$jsonapi = json_decode($jsonapi,true);
+
+		if (!$jsonapi)
+			return _T('proposer_film:erreur_titre_inconnu_imbd');
+
+		if(!isset($jsonapi['ID']))
+			return _T('proposer_film:erreur_imbd');
+
+		$id = $jsonapi['ID'];
 	}
-	if (!$json)
-		return _T('proposer_film:erreur_titre_inconnu_imbd');
 
-	if(!isset($json['Title']))
-		return _T('proposer_film:erreur_imbd');
-
-	$id = $json['ID'];
+	$url = "http://www.imdb.com/title/$id/";
+	$html = recuperer_page($url);
+	$json = extraire_imdb_from_html($id, $html);
 
 	// corriger le poster
 	if ($json['Poster']=="N/A")
@@ -111,14 +110,6 @@ function renseigner_imdb($search){
 		$GLOBALS['meta']["adresse_site"] = '';
 		$json['Poster'] = _DIR_RACINE . copie_locale($json['Poster']);
 		$GLOBALS['meta']["adresse_site"] = $adresse;
-	}
-
-	// corriger le titre
-	if (!$html){
-		$url = "http://www.imdb.com/title/$id/";
-		$html = recuperer_page($url);
-		$json2 = extraire_imdb_from_html($id, $html);
-		$json['Title'] = $json2['Title'];
 	}
 
 	return $json;
@@ -158,8 +149,21 @@ function extraire_imdb_from_html($id, $html){
 	if (preg_match(",http://ia.media-imdb.com/images/[^'\"]*.jpg,i",$html,$m))
 		$json['Poster'] = $m[0];
 
-	if (preg_match(",<a[^>]*itemprop=['\"]director['\"].*</a>,Uims",$html,$m))
-		$json['Director'] = strip_tags($m[0]);
+	preg_match_all(",<a[^>]*itemprop=['\"]director['\"].*</a>,Uims",$html,$m);
+	if ($m){
+		$json['Director'] = implode(', ',array_map('strip_tags',reset($m)));
+	}
+
+	if (preg_match(",<p[^>]*itemprop=['\"]description['\"].*</p>,Uims",$html,$m))
+		$json['Plot'] = strip_tags($m[0]);
+
+	preg_match_all(",<a[^>]*itemprop=['\"]actors['\"].*</a>,Uims",$html,$m);
+	if ($m){
+		$json['Actors'] = implode(', ',array_map('strip_tags',reset($m)));
+	}
+	if (preg_match(",<time[^>]*itemprop=['\"]duration['\"].*</time>,Uims",$html,$m)){
+		$json["Runtime"] = strip_tags($m[0]);
+	}
 
 	$json = array_map('trim',$json);
 	include_spip('inc/charset');
