@@ -1,0 +1,20 @@
+<BOUCLE_content(ARTICLES){id_article}{statut==.*}>
+[(#REM) Fil d'Ariane ]
+<p id="hierarchie"><a href="#URL_SITE_SPIP/"><:accueil_site:></a>[<span class="sep"> &gt; </span><strong class="on">(#TITRE|couper{80})</strong>]</p>
+
+<div class="content-principal">
+	<div class="cartouche">
+		<h1 class="h1 #EDIT{titre}">#TITRE</h1>
+	</div>
+
+	[<div class="#EDIT{descriptif} descriptif surlignable">(#DESCRIPTIF|image_reduire{500,0})</div>]
+
+</div>
+
+[<div class="notes"><h2><:info_notes:></h2>(#NOTES)</div>]
+
+[(#REM) Forum de l'article
+NB : pour desactiver les forums de l'article, supprimez simplement la ligne ci-dessous ]
+<INCLURE{fond=inclure/forum,id_article,repondre_url=(#PARAMETRES_FORUM|url_reponse_forum),repondre_titre=Ajouter un commentaire} />
+
+</BOUCLE_content>

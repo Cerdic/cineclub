@@ -7,3 +7,15 @@
 .formulaire_jaime .etoiles {display: block;float: right;margin-left: 10px;}
 .formulaire_jaime form {clear:none;float: right;}
 .formulaire_jaime .submit {color:#333;box-shadow: none;background: none;}
+
+.page_sommaire .item.film.refuse .descriptif {color:#999;text-decoration: line-through;}
+.page_sommaire .item .commenter {float: left;}
+.page_sommaire .item .action {float: right;}
+
+.imdb {padding-left: 90px;}
+.imdb img {float: left;margin-left: -90px;position: relative;display: inline;}
+.imdb dt,.imdb dd {margin-bottom: 0;}
+
+.page_article .imdb dt {display: none;}
+
+.comments {margin-top: 3em;}
