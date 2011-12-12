@@ -28,8 +28,10 @@
 			<input type='hidden' name='imdb_data' value='[(#GET*{imdb}|serialize|base64_encode)]' />
 			[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
 			<!--extra-->
+			[(#ENV**{erreurs}|table_valeur{titre}|non)
 			<p class='boutons'><span class='image_loading'>&nbsp;</span>
 				<input type='submit' class='submit' name="add" value='<:bouton_ajouter:>' /></p>
+			]
 		]
 	</div></form>
 	]

@@ -28,7 +28,7 @@ function formulaires_proposer_film_verifier_dist($id_rubrique,$id_article=0){
 	if (!isset($erreurs['titre'])
 		AND (
 			_request('search')
-		  OR !$imdb=_request('imdb_data')
+		  OR !$imdb = _request('imdb_data')
 	    OR !$imdb = unserialize(base64_decode($imdb))
 		)){
 		$titre = _request('titre');
@@ -36,9 +36,13 @@ function formulaires_proposer_film_verifier_dist($id_rubrique,$id_article=0){
 		$json = renseigner_imdb($titre);
 		if (is_string($json))
 			$erreurs['titre'] = $json;
-		else
-			$erreurs['_imdb'] = $json;
+		else{
+			$erreurs['_imdb'] = $imdb = $json;
+		}
 	}
+	// verifier que ce film n'est pas deja en base
+	if ($imdb AND sql_countsel('spip_articles','url_site='.sql_quote($imdb['Url'])))
+		$erreurs['titre'] = _T('proposer_film:erreur_film_deja_propose');
 	return $erreurs;
 
 }
@@ -50,6 +54,7 @@ function formulaires_proposer_film_traiter_dist($id_rubrique,$id_article=0){
 
 	set_request('id_parent',$id_rubrique);
 	set_request('titre',$imdb['Title']);
+	set_request('url_site',$imdb['Url']);
 
 	$desc = recuperer_fond('modeles/imdb',array('imdb'=>$imdb));
 
@@ -101,6 +106,7 @@ function renseigner_imdb($search){
 	$url = "http://www.imdb.com/title/$id/";
 	$html = recuperer_page($url);
 	$json = extraire_imdb_from_html($id, $html);
+	$json['Url'] = $url;
 
 	// corriger le poster
 	if ($json['Poster']=="N/A")
