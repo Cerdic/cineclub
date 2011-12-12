@@ -2,8 +2,9 @@
 [(#REM) Fil d'Ariane ]
 <p id="hierarchie"><a href="#URL_SITE_SPIP/"><:accueil_site:></a>[<span class="sep"> &gt; </span><strong class="on">(#TITRE|couper{80})</strong>]</p>
 
-<div class="content-principal">
+<div class="content-principal clearfix">
 	<div class="cartouche">
+		[(#STATUT|=={prop}|oui)[(#FORMULAIRE_JAIME{article,#ID_ARTICLE})]]
 		<h1 class="h1 #EDIT{titre}">#TITRE</h1>
 	</div>
 
