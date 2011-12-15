@@ -10,6 +10,11 @@
 		<BOUCLE_films(ARTICLES){id_rubrique}{statut IN #ENV{statut,#LISTE{prop,refuse}}}{notation}{!par #ENV{par,nombre_votes}}{pagination 20}>
 		<li class="item film #STATUT">[(#STATUT|=={prop}|oui)[(#FORMULAIRE_JAIME{article,#ID_ARTICLE})]]
 			[<div class='descriptif #EDIT{descriptif}'>(#DESCRIPTIF|PtoBR|sinon{#TITRE}|image_reduire{80,125})</div>]
+			<div class="tags #EDIT{tags}">
+				<BOUCLE_mots(MOTS){type=tags}{id_article}{par titre}><span class="tag">#TITRE</span></BOUCLE_mots>
+				<span class="notag">aucun tag</span>
+				<//B_mots>
+			</div>
 			<div class="nettoyeur"></div>
 			<div class="commenter">
 				<BOUCLE_mess(FORUMS){id_article} />[(#TOTAL_BOUCLE|oui)
