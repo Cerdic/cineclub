@@ -21,14 +21,23 @@
 		<!--extra-->
 		<p class='boutons'><span class='image_loading'>&nbsp;</span>
 		<input type='submit' class='submit' name="search" value='<:proposer_film:bouton_rechercher:>' /></p>
-
+	</div></form>
+	<form method='post' action='#ENV{action}'><div>
+		[(#REM) declarer les hidden qui declencheront le service du formulaire
+		parametre : url d'action ]
+		#ACTION_FORMULAIRE{#ENV{action}}
+		#SET{fl,#FORM}
+		<input type="hidden" name="titre" class="text" value="#ENV*{titre}" />
 		[(#ENV**{erreurs}|table_valeur{_imdb}|oui)
 			#SET{imdb,#ENV**{erreurs}|table_valeur{_imdb}}
 			[(#MODELE{imdb,imdb=#GET*{imdb}})]
 			<input type='hidden' name='imdb_data' value='[(#GET*{imdb}|serialize|base64_encode)]' />
 			[(#REM) ajouter les saisies supplementaires : extra et autre, a cet endroit ]
-			<!--extra-->
 			[(#ENV**{erreurs}|table_valeur{titre}|non)
+			<ul>
+				#INCLURE{fond=formulaires/inc-saisie-tags,objet=article,id_objet=new,type_mot=tags,supprimable=' ',ajoutable=' ',autosubmit='',env}
+			</ul>
+			<!--extra-->
 			<p class='boutons'><span class='image_loading'>&nbsp;</span>
 				<input type='submit' class='submit' name="add" value='<:bouton_ajouter:>' /></p>
 			]

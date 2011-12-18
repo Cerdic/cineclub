@@ -41,7 +41,7 @@ function formulaires_proposer_film_verifier_dist($id_rubrique,$id_article=0){
 		}
 	}
 	// verifier que ce film n'est pas deja en base
-	if ($imdb AND sql_countsel('spip_articles','url_site='.sql_quote($imdb['Url'])))
+	if ($imdb AND sql_countsel('spip_articles',"statut!='poubelle' AND url_site=".sql_quote($imdb['Url'])))
 		$erreurs['titre'] = _T('proposer_film:erreur_film_deja_propose');
 	return $erreurs;
 
@@ -71,6 +71,12 @@ function formulaires_proposer_film_traiter_dist($id_rubrique,$id_article=0){
 			$res['message_ok'] = _T('proposer_film:message_ok_propose');
 		$res['message_ok'].='<script type="text/javascript">jQuery(".listefilms").ajaxReload({args:{debut_film:"@'.$res['id_article'].'"}});</script>';
 		set_request('titre','');
+
+		if (
+			$tags = _request('tags')
+			AND include_spip('inc/tags')){
+			tags_tagger('article',$res['id_article'],$tags);
+		}
 	}
 	$res['editable'] = true;
 

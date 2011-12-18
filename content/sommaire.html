@@ -3,10 +3,10 @@
 	| [(#SELF|parametre_url{vu,'oui'}|lien_ou_expose{Films vus,#ENV{vu,''}|oui})]
 </p>
 [(#ENV{vu,''}|oui)
-<INCLURE{fond=inclure/liste-films-proposes,id_rubrique=1,statut=publie,par=date,ajax} />
+<INCLURE{fond=inclure/liste-films-proposes,id_rubrique=1,statut=publie,par=date,env,ajax} />
 ]
 [(#ENV{vu,''}|non)
-<INCLURE{fond=inclure/liste-films-proposes,id_rubrique=1,ajax} />
+<INCLURE{fond=inclure/liste-films-proposes,id_rubrique=1,env,ajax} />
 <div class="ajax">
 	#FORMULAIRE_PROPOSER_FILM{1}
 </div>

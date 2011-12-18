@@ -1,10 +1,6 @@
 .pagination {background: none;}
 .listefilms,.formulaire_proposer_film {margin-left: 7em;margin-right: 7em;}
 .formulaire_proposer_film {margin-top: 3em;}
-.liste-items.films .item {list-style: none;}
-.liste-items.films .tags {padding-left: 90px;background: url(img/tag_red.png) no-repeat 70px top;min-height: 16px;}
-.liste-items.films .tags .tag {display: block;float: left;padding: 2px;background: #eee;margin-right:5px; }
-.liste-items.films .tags .notag {font-style: italic;color:#eee;}
 
 .formulaire_jaime {float: right;margin-top: 0;}
 .formulaire_jaime * {margin-top: 0;}
@@ -19,6 +15,13 @@
 .imdb {padding-left: 90px;}
 .imdb img {float: left;margin-left: -90px;position: relative;display: inline;}
 .imdb dt,.imdb dd {margin-bottom: 0;}
+.imdb dl {margin-bottom: 0;}
+
+.liste-items.films .item {list-style: none;}
+.liste-items.films .formulaire_tagger {padding: 0;padding-left:90px; border: 0;background: none;margin-bottom: 1.5em;}
+.liste-items.films .formulaire_tagger ul {list-style: none;margin: 0;padding: 0;}
+
+h2.tag {padding: 2px 8px;padding-left:40px;background: #ddd url(img/tag-32.png) no-repeat 2px center;margin-right:5px; border-radius: 10px;display: inline-block;}
 
 .page_article .imdb dt {display: none;}
 .comments {margin-top: 3em;}

@@ -1,4 +1,7 @@
 <div class="listefilms">
+	<BOUCLE_tag(MOTS){id_mot}><h2 class="tag">#TITRE</h2></BOUCLE_tag>
+	<a href="[(#URL_SITE_SPIP|parametre_url{vu,#ENV{vu,''}})]">Tous les films</a>
+	</B_tag>
 <B_films>
 	<h3>[(#ENV{statut}|=={publie}|oui)
 			[(#GRAND_TOTAL|singulier_ou_pluriel{proposer_film:un_film_vu,proposer_film:nb_films_vus})]
@@ -7,14 +10,10 @@
 		]
 	</h3>
 	<ul class="liste-items films">
-		<BOUCLE_films(ARTICLES){id_rubrique}{statut IN #ENV{statut,#LISTE{prop,refuse}}}{notation}{!par #ENV{par,nombre_votes}}{pagination 20}>
+		<BOUCLE_films(ARTICLES){id_rubrique}{id_mot?}{statut IN #ENV{statut,#LISTE{prop,refuse}}}{notation}{!par #ENV{par,nombre_votes}}{pagination 20}>
 		<li class="item film #STATUT">[(#STATUT|=={prop}|oui)[(#FORMULAIRE_JAIME{article,#ID_ARTICLE})]]
 			[<div class='descriptif #EDIT{descriptif}'>(#DESCRIPTIF|PtoBR|sinon{#TITRE}|image_reduire{80,125})</div>]
-			<div class="tags #EDIT{tags}">
-				<BOUCLE_mots(MOTS){type=tags}{id_article}{par titre}><span class="tag">#TITRE</span></BOUCLE_mots>
-				<span class="notag">aucun tag</span>
-				<//B_mots>
-			</div>
+			<div class="ajax">#FORMULAIRE_TAGGER{article,#ID_ARTICLE}</div>
 			<div class="nettoyeur"></div>
 			<div class="commenter">
 				<BOUCLE_mess(FORUMS){id_article} />[(#TOTAL_BOUCLE|oui)
