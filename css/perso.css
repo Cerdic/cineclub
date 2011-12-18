@@ -9,7 +9,7 @@
 .formulaire_jaime .submit {color:#333;box-shadow: none;background: none;}
 
 .page_sommaire .item.film.refuse .descriptif {color:#999;text-decoration: line-through;}
-.page_sommaire .item .commenter {float: left;}
+.page_sommaire .item .commenter {float: left;margin-left: 90px;}
 .page_sommaire .item .action {float: right;}
 
 .imdb {padding-left: 90px;}
@@ -25,3 +25,14 @@ h2.tag {padding: 2px 8px;padding-left:40px;background: #ddd url(img/tag-32.png) 
 
 .page_article .imdb dt {display: none;}
 .comments {margin-top: 3em;}
+.liste-items.films .item .comments {padding-left: 90px;}
+.liste-items.films .item .comments h2 {display: none;}
+.liste-items.films .item .comments-items {list-style: none;margin-left: 0px;border-color: #ddd;}
+.liste-items.films .item .comment-item {border-color: #ddd;}
+.liste-items.films .item .comment-item .comment-meta .item {padding: 0;}
+
+.box_mediabox {text-align: left;}
+.box_mediabox .content-principal {max-width: 44em;margin-right: 20px;}
+.box_mediabox .formulaire_forum {border: 0;padding: 0;margin-top: 1.5em;}
+.box_mediabox .formulaire_forum fieldset.session_qui {display: none;}
+.box_mediabox .formulaire_forum textarea {height: 7em;}

@@ -1,0 +1,25 @@
+<div class="content-principal">
+
+<div class="cartouche">
+    <h1 class="h1"><:poster_message:></h1>
+</div>
+
+<div class="resume articles">
+
+    <BOUCLE_forum_parent(FORUMS) {id_forum}>
+		<h2 class="h2"><:en_reponse:></h2>
+    <h3 class="h3"><a href="#URL_FORUM">#TITRE</a></h3>
+		<div class="info-publi">[<abbr class="published" title="[(#DATE|date_iso)]">(#DATE|affdate_jourcourt)[&nbsp;(#DATE|heures)][:(#DATE|minutes)]</abbr>][<span class="sep">, </span><span class="auteurs"><:par_auteur:> (#NOM)</span>]</div>
+    [<div class="introduction">(#INTRODUCTION|lignes_longues)</div>]
+    </BOUCLE_forum_parent>
+    
+    <BOUCLE_article(ARTICLES) {id_article}{statut IN prop,publie}>
+		[<div class="#EDIT{descriptif} descriptif surlignable">(#DESCRIPTIF|image_reduire{500,0})</div>]
+    </BOUCLE_article>
+
+    <//B_forum_parent>
+
+</div>
+
+#FORMULAIRE_FORUM
+</div>
